@@ -1,0 +1,1 @@
+export type RequiredHeaders = { [key: string]: number }
