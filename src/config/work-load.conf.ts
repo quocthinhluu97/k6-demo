@@ -4,8 +4,6 @@ const WorkLoadConfig = {
     ],
     // PREQA:[]
     // PROD:[]
-}
+};
 
-export {
-    WorkLoadConfig
-}
+export default WorkLoadConfig

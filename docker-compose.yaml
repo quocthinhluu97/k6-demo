@@ -14,7 +14,6 @@ services:
       - --web.enable-remote-write-receiver
       - --enable-feature=native-histograms
       - --config.file=/etc/prometheus/prometheus.yaml
-
     volumes:
     - ./config/prometheus.yaml:/etc/prometheus/prometheus.yaml
 

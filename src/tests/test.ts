@@ -2,13 +2,15 @@ import http from "k6/http";
 import { check, sleep } from 'k6';
 import { Trend, Counter } from 'k6/metrics'
 import ErrorHandler from "../utilities/error-handler.util.ts";
-import { WorkLoadConfig } from "../config/work-load.conf.ts";
+import WorkLoadConfig from "../config/work-load.conf.ts";
 import OrderPizzaScenario from "../scenarios/order-pizza.ts";
+import ThresholdsConfig from '../config/thresholds.conf.ts';
 
 // const BASE_URL = __ENV.BASE_URL || "http://localhost:3333";
 
 export const options = {
-    stages: WorkLoadConfig.SMOKE
+    stages: WorkLoadConfig.SMOKE,
+    threshold: ThresholdsConfig.COMMON
 };
 
 export function setup() {

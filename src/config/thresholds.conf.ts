@@ -5,4 +5,6 @@ const ThresholdsConfig = {
     },
     // PREQA    
     // PROD
-}
+};
+
+export default ThresholdsConfig
