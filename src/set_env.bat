@@ -2,7 +2,7 @@
 
 set K6_ENV=development
 set K6_WEB_DASHBOARD=true
-set K6_WEB_DASHBOARD_OUTPUT=html-report.html
+set K6_WEB_DASHBOARD_EXPORT=html-report.html
 set K6_REPORTS_FOLDER=./reports/
 set K6_TEST_FILE=tests/smoke.ts
 set K6_PACKED_FILE=../dist/smoke

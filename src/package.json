@@ -7,7 +7,7 @@
   "scripts": {
     "pack": "k6pack %K6_TEST_FILE% -o %K6_PACKED_FILE%",
     "test": "k6.exe run %K6_PACKED_FILE% --compatibility-mode=%K6_COMPATIBILITY_MODE% --out %K6_OUTPUT_STREAM% --http-debug=full",
-    "archive-report": "mkdir reports 2> NUL & move %K6_WEB_DASHBOARD_OUTPUT% %K6_REPORTS_FOLDER%",
+    "archive-report": "mkdir reports 2> NUL & move %K6_WEB_DASHBOARD_EXPORT% %K6_REPORTS_FOLDER%",
     "all": "npm run pack && npm run test && npm run archive-report"
   },
   "author": "",
