@@ -5,9 +5,9 @@ import ErrorDetails from '../models/log-error-details.model';
 
 export class BaseRequest {
     protected async handleRequest(requestFn: () => Promise<RefinedResponse>, expectedStatusCodes: number[] = [200]): Promise<RefinedResponse> {
-        // Set the expected status codes 
-        // http.setResponseCallBack(http.expectedStatuses(...expectedStatusCodes));
-        
+        // Set expected response status codes
+        http.setResponseCallback(http.expectedStatuses(...expectedStatusCodes));
+
         // Make the request
         let res: RefinedResponse = await requestFn();
 

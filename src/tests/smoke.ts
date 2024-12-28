@@ -19,10 +19,9 @@ export const options = {
     scenarios: {
         smoke: {
             executor: 'ramping-vus',
-            exec: 'test',
+            exec: 'smoke',
             stages: WorkLoadConfig.SMOKE
         }
-
     }
 };
 
@@ -35,7 +34,7 @@ export function setup() {
     }
 }
 
-export default async function test() {
+export async function smoke() {
     const pizzaRequest = new PizzaRequest(__ENV.USER_ID);
     let restrictions: OrderRestriction = _faker.orderRestrictions();
     restrictions.excludedTools = [recommendations[0].excluded_tools];
