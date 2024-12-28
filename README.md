@@ -18,6 +18,14 @@ This is a pet project to demo on k6 performance test
 ### k6
 Can be installed from the [Official](https://grafana.com/docs/k6/latest/set-up/install-k6/) page
 
+### golang
+Can be installed from the [Official](https://go.dev/doc/install) page
+
+### xk6
+```
+go install go.k6.io/xk6/cmd/xk6@latest
+```
+
 ### Build k6 executable file with exentions
 On Windows:
 ```
@@ -42,8 +50,13 @@ To bundle your test assuming that your working directory is src and test file na
 k6pack tests/smoke.ts -o ../dist/smoke
 ```
 
+Set up enviroment variables
+```
+.\src\set_env.bat
+```
+
 To run test
 Feel free to edit the scripts in _package.json_ as you wish
 ```
-npm run test
+npm run all
 ```
