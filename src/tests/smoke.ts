@@ -1,17 +1,32 @@
 import http from "k6/http";
-import { check, sleep } from 'k6';
-import { Trend, Counter } from 'k6/metrics'
-import ErrorHandler from "../utilities/error-handler.util.ts";
+import { sleep } from 'k6';
+import { SharedArray } from 'k6/data';
+import papaparse from 'https://jslib.k6.io/papaparse/5.1.1/index.js';
 import WorkLoadConfig from "../config/work-load.conf.ts";
-import OrderPizzaScenario from "../scenarios/order-pizza.ts";
-import ThresholdsConfig from '../config/thresholds.conf.ts';
+import FileUtils from "../utilities/file.util.ts";
+import AppSettings from "../constants/app-settings.const.ts";
+import { PizzaRequest } from "../requests/pizza.request.ts";
+import OrderRestriction from "../models/order-restriction.model.ts";
+import { _faker } from "../utilities/faker.util.ts";
 
-// const BASE_URL = __ENV.BASE_URL || "http://localhost:3333";
+const recommendationsFile = FileUtils.getPathByEnv(AppSettings.RECOMMENDATIONS_FILE);
+const recommendations = new SharedArray('recommendations', function () {
+    return papaparse.parse(open(recommendationsFile), { header: true }).data
+});
 
 export const options = {
-    stages: WorkLoadConfig.SMOKE,
-    threshold: ThresholdsConfig.COMMON
+    setupTimeout: '30s',
+    scenarios: {
+        smoke: {
+            executor: 'ramping-vus',
+            exec: 'test',
+            stages: WorkLoadConfig.SMOKE
+        }
+
+    }
 };
+
+const maxSleepTime = 5;
 
 export function setup() {
     let res = http.get(__ENV.BASE_URL);
@@ -20,20 +35,15 @@ export function setup() {
     }
 }
 
-const pizzas = new Counter('quickpizza_number_of_pizzas');
-const ingredients = new Trend('quickpizza_ingredients');
-const errorHandler = new ErrorHandler((error) => { console.error(error) });
+export default async function test() {
+    const pizzaRequest = new PizzaRequest(__ENV.USER_ID);
+    let restrictions: OrderRestriction = _faker.orderRestrictions();
+    restrictions.excludedTools = [recommendations[0].excluded_tools];
+    await pizzaRequest.sendOrder(restrictions);
 
-export default function () {
-    OrderPizzaScenario();
+    sleep(Math.random() * maxSleepTime);
 }
 
 export function teardown() {
     console.log("Tearing down.");
 }
-
-// export function handleSummary(data) {
-//   return {
-//     'summary.json': JSON.stringify(data),
-//   }
-// }

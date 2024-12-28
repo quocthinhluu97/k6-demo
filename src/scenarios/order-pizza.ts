@@ -1,11 +1,9 @@
 import { check, sleep } from 'k6';
 import faker from 'k6/x/faker';
-import ErrorHandler from "../utilities/error-handler.util.ts";
 import QuickPizzaApi from '../apis/quick-pizza.api.ts';
 import { IResponse } from '../models/response.model.ts';
 import OrderRestriction from '../models/order-restriction.model.ts';
 
-const errorHandler = new ErrorHandler((error) => { console.error(error) });
 
 export default async function OrderPizzaScenario() {
     let restrictions: OrderRestriction = {
@@ -29,7 +27,6 @@ export default async function OrderPizzaScenario() {
         "is status 200": (r) => r.status === 200,
     })
 
-    errorHandler.logError(!checkStatus, res);
 
     sleep(1);
 }

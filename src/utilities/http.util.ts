@@ -1,7 +1,4 @@
-import http, { RefinedResponse } from 'k6/http';
-// import RequestMethods from '../types/RequestMethods.enum.ts';
-// import { RequiredHeaders } from '../models/auth.model.ts';
-// import { serialize } from 'object-to-formdata';
+import http, { RefinedResponse, RefinedParams } from 'k6/http';
 import RequestMethods from '../constants/request-methods.const.ts';
 import { IHttpOptions } from '../models/request.model.ts';
 import { RequiredHeaders } from '../models/auth.model.ts';
@@ -17,8 +14,6 @@ import { RequiredHeaders } from '../models/auth.model.ts';
  * Note you can specify the baseUrl in the options object or you can set the API_URL environment variable.
  * The baseUrl within the options object will override the API_URL environment variable.
  */
-
-
 export default class HttpUtil {
     private readonly headers: { [key: string]: number };
 
@@ -26,75 +21,60 @@ export default class HttpUtil {
         this.headers = { ...options };
     }
 
-    public async request(
-        options: Partial<IHttpOptions>
-    ): Promise<RefinedResponse<any>> {
+    public async request<T>(
+        options: IHttpOptions
+    ): Promise<RefinedResponse<T>> {
         options.method = options.method ?? RequestMethods.GET;
 
-        const {
-            headers = { ...options.headers, ...this.headers},
-            timeout = options.timeout || 60 * 1000,
-            tags,
-            redirects,
-        }: Partial<IHttpOptions> = options;
+        const params: RefinedParams = options.params;
+        params.headers = { ...this.headers, ...options.params.headers }
 
-        return await http.asyncRequest(options.method, options.url!, options.body, {
-            headers,
-            timeout,
-            tags,
-            redirects,
-        });
+        return await http.asyncRequest(options.method, options.url!, options.body, params);
+
     }
 
-    public async get(options: Partial<IHttpOptions>) {
+    public async get<T>(options: IHttpOptions) {
         return await this.request({
             ...options,
-            headers: this.headers,
             method: RequestMethods.GET,
         });
     }
 
-    public async delete(options: Partial<IHttpOptions>) {
+    public async delete(options: IHttpOptions) {
         return await this.request({
             ...options,
-            headers: this.headers,
             method: RequestMethods.DELETE,
         });
     }
 
-    public async put(options: Partial<IHttpOptions>) {
+    public async put<T>(options: IHttpOptions) {
         return await this.request({
             ...options,
-            headers: this.headers,
             method: RequestMethods.PUT,
         });
     }
 
-    public async post(options: Partial<IHttpOptions>) {
+    public async post<T>(options: IHttpOptions) {
         return await this.request({
             ...options,
-            headers: {
-                ...this.headers,
-                "Content-Type": "application/json",
-            },
             method: RequestMethods.POST,
             body: JSON.stringify(options.body),
+            params: { headers: { 'Content-Type': 'application/json' } }
         });
     }
 
-    public async postForm(options: Partial<IHttpOptions>) {
+    public async postForm<T>(options: IHttpOptions) {
         return await this.request({
             ...options,
-            headers: { ...this.headers, 'Content-Type': 'x-www-form-urlencoded' },
             method: RequestMethods.POST,
-            //   body: serialize(options.body),
+            params: { headers: {'Content-Type': 'x-www-form-urlencoded' } }
+            // body: serialize(options.body),
         });
     }
 
-    public async update(options: Partial<IHttpOptions>) {
+    public async update<T>(options: IHttpOptions) {
         return await this.request({
             ...options,
-            headers: this.headers,
             method: RequestMethods.UPDATE,
         });
     }

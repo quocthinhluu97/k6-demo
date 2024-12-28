@@ -2,9 +2,9 @@ import { RequiredHeaders } from "../models/auth.model.ts";
 import HttpUtil from "../utilities/http.util.ts";
 
 export class BaseApi {
-    protected readonly http: HttpUtil;
+    protected readonly _http: HttpUtil;
 
     constructor(headers?: RequiredHeaders) {
-        this.http = new HttpUtil(headers);
+        this._http = new HttpUtil(headers);
     }
 }
